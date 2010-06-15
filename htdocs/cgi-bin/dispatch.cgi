@@ -49,7 +49,6 @@ if (-e $confFile ) {
 	print STDERR "SMOLDER: Warning, running unconfigured, putting data into $smolderDir\n";
 	mkpath($smolderDir.'/logs');
 	mkpath($smolderDir.'/data');
-	mkpath($smolderDir.'/sql');
 	Smolder::Conf->init(
 	#  Port                  => 80,
 	#  HostName              => 'localhost',
@@ -57,7 +56,6 @@ if (-e $confFile ) {
 	#  SMTPHost              => 'smokebot.yourdomain.com',
 	  LogFile               => $smolderDir.'/logs/app.log',
 	  DataDir               => $smolderDir.'/data',
-	  SQLDir               => $smolderDir.'/sql',
 	);
 }
 
