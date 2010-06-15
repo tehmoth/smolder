@@ -50,6 +50,27 @@ It also provides a connect() method for getting a DBI connection from non Class:
 
 =head1 INTERFACE
 
+=head2 prepare_database
+
+create or upgrade the database file
+
+=cut
+
+sub prepare_database {
+    my $self = shift;
+
+    # do we have a database? If not then create one
+    unless (-e $self->db_file) {
+	print STDERR "creating new database at ".$self->db_file."\n";
+        $self->create_database;
+    } else {
+        # upgrade if we need to
+        require Smolder::Upgrade;
+	print STDERR "upgrading database at ".$self->db_file."\n";
+        Smolder::Upgrade->new->upgrade();
+    }
+}
+
 =head2 dbh
 
 Get the database handle.
