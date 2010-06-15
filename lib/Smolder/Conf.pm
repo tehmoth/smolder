@@ -31,6 +31,7 @@ BEGIN {
     %VALUES = (
         Port                  => 8080,
         HostName              => $default_hostname,
+        UrlPathPrefix         => '',
         FromAddress           => "smolder\@$default_hostname",
         SMTPHost              => $default_hostname,
         LogFile               => '',

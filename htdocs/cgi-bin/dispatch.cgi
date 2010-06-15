@@ -52,6 +52,7 @@ if (-e $confFile ) {
 	Smolder::Conf->init(
 	#  Port                  => 80,
 	#  HostName              => 'localhost',
+	UrlPathPrefix           => '/smolder',
 	#  FromAddress           => 'smokebot@yourdomain.com',
 	#  SMTPHost              => 'smokebot.yourdomain.com',
 	  LogFile               => $smolderDir.'/logs/app.log',

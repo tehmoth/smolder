@@ -58,7 +58,7 @@
 </tr>
 [% IF project.enable_feed %]
 <tr>
-  <td><label>Data Feeds <img src="/images/rss.png"></label></td>
+  <td><label>Data Feeds <img src="[% c.static_url('/images/rss.png') %]"></label></td>
   <td>
     <a href="/app/projects/feed/[% project.id %]">[% url_base %]/app/projects/feed/[% project.id %]</a> 
     <em>(all)</em><br />
