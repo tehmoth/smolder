@@ -31,6 +31,7 @@ BEGIN {
     %VALUES = (
         Port                  => 8080,
         HostName              => $default_hostname,
+        UrlPathPrefix         => '',
         FromAddress           => "smolder\@$default_hostname",
         SMTPHost              => $default_hostname,
         LogFile               => '',
@@ -47,6 +48,9 @@ BEGIN {
         ReportsPerPage        => 5,
         AutoRedirectToProject => 0,
     );
+}
+sub my_datadir {
+	return $VALUES{DataDir};
 }
 
 =head1 NAME
@@ -209,6 +213,7 @@ sub init {
     foreach my $key (keys %args) {
         if( exists $VALUES{$key} ) {
             $VALUES{$key} = $args{$key};
+print STDERR "$key == $VALUES{$key} \n";
         } else {
             croak "$key is not a valid Smolder config parameter!";
         }

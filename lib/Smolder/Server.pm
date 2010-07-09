@@ -45,14 +45,8 @@ sub start {
 		mkpath(DataDir) or die sprintf("Could not create %s: $!", DataDir);
 	}
 
-    # do we have a database? If not then create one
-    unless (-e Smolder::DB->db_file) {
-        Smolder::DB->create_database;
-    } else {
-        # upgrade if we need to
-        require Smolder::Upgrade;
-        Smolder::Upgrade->new->upgrade();
-    }
+	#create or upgrade the database
+	Smolder::DB->prepare_database;
 
     # preload our perl modules
     require Smolder::Dispatch;
