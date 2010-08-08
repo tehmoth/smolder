@@ -60,7 +60,7 @@ Show the help screen.
 
 =cut
 
-my ($conf, $daemon, $help, $port, $host, $data_dir, $share_dir, $log_file);
+my ($conf, $daemon, $help, $port, $host, $data_dir, $share_dir, $log_file, $log_level);
 GetOptions(
     'conf|c=s'    => \$conf,
     'daemon|d'    => \$daemon,
@@ -69,6 +69,7 @@ GetOptions(
     'data_dir=s'  => \$data_dir,
     'share_dir=s' => \$share_dir,
     'log_file=s'  => \$log_file,
+    'log_level=s' => \$log_level,
     'help'        => \$help,
 ) or exit 1;
 pod2usage(1) if $help;
@@ -78,6 +79,7 @@ $conf_values{Port}     = $port     if $port;
 $conf_values{HostName} = $host     if $host;
 $conf_values{DataDir}  = $data_dir if $data_dir;
 $conf_values{LogFile}  = $log_file if $log_file;
+$conf_values{LogLevel} = $log_level if $log_level;
 if ($share_dir) {
     $conf_values{TemplateDir} = catdir($share_dir, 'templates');
     $conf_values{SQLDir}      = catdir($share_dir, 'sql');
