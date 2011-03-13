@@ -1,5 +1,5 @@
 package Smolder::Util;
-use Smolder::Conf qw(HostName Port);
+use Smolder::Conf qw(HostName UrlBase Port);
 use strict;
 use warnings;
 
@@ -66,13 +66,20 @@ sub format_time {
 
 =head2 url_base
 
-This method will return the base url for the installed version of
-Smolder.
+This method will return either the base url for the installed version of
+Smolder or the value of the UrlBase configuration option. UrlBase
+is useful for configurations where Smolder is hosted behind a proxy.
 
 =cut
 
 {
-    my $_base = 'http://' . HostName . (Port == 80 ? '' : ':' . Port);
+    my $_base;
+    if (UrlBase) {
+        $_base = UrlBase;
+    }
+    else {
+        $_base = 'http://' . HostName . (Port == 80 ? '' : ':' . Port);
+    }
     sub url_base { $_base }
 }
 
