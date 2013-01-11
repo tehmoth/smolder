@@ -88,6 +88,10 @@ Run the daemon:
 
     $ smolder --daemon --conf /home/smolder/main/smolder.conf
 
+or run as a PSGI application:
+
+    $ plackup bin/smolder.psgi
+
 Now you can submit reports by executing your tests using the `--archive`
 option of the `prove` utility:
 
