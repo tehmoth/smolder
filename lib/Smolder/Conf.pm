@@ -34,7 +34,7 @@ BEGIN {
         UrlBase               => '',
         UrlPathPrefix         => '',
         FromAddress           => "smolder\@$default_hostname",
-        SMTPHost              => $default_hostname,
+        SMTPHost              => 'localhost',
         LogFile               => '',
         LogLevel              => 'warning',
         PidFile               => undef,
