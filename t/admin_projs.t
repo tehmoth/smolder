@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
+die_on_fail();
 use Smolder::TestScript;
 use Smolder::TestData qw(
   base_url
@@ -14,7 +15,7 @@ use Smolder::TestData qw(
   create_preference
   delete_preferences
 );
-use Smolder::DB::ProjectDeveloper;
+use Smolder::DB;
 use Smolder::Mech;
 
 if (is_smolder_running) {
@@ -94,6 +95,7 @@ $mech->content_contains('Projects');
     $mech->content_contains('class="required warn">Start Date');
     $mech->content_contains('Invalid Start Date');
 TODO: { local $TODO = "probably caused by some HTML change";
+    #warn $mech->content;
     $mech->content_contains('class="required warn">Public Project');
     $mech->content_contains('class="required warn">Data Feeds');
     $mech->content_contains('class="required warn">Number of Full Reports Saved');
@@ -106,8 +108,8 @@ TODO: { local $TODO = "probably caused by some HTML change";
     $mech->submit();
     ok($mech->success);
     $mech->contains_message("New project '$data{project_name}' successfully created");
-    ($proj) = Smolder::DB::Project->search(name => $data{project_name});
-    isa_ok($proj, 'Smolder::DB::Project');
+    ($proj) = Smolder::DB::rs('Project')->search({ name => $data{project_name} });
+    isa_ok($proj, 'Smolder::DB::Schema::Result::Project');
     foreach my $field (keys %data) {
         if( $field eq 'start_date' ) {
             isa_ok($proj->start_date, 'DateTime');
@@ -125,7 +127,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 # 32..36
 # details
 {
-    $mech->get_ok("$BASE_URL/details/$proj");
+    $mech->get_ok("$BASE_URL/details/".$proj->id);
     $mech->content_contains($proj->name);
     $mech->content_contains($proj->start_date->strftime('%d/%m/%Y'));
     $mech->content_like(qr|Public Project\?</label>\s*</td>\s*<td>\s*No\s*|);
@@ -146,7 +148,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 
     # invalid form
     my $other_proj = create_project();
-    my $url        = "$BASE_URL/process_add/$proj";
+    my $url        = "$BASE_URL/process_add/".$proj->id;
     my $request    = HTTP::Request::Common::POST(
         $url,
         {
@@ -177,7 +179,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
     $mech->submit();
     ok($mech->success);
     $mech->contains_message("Project '$new_data{project_name}' successfully updated");
-    $mech->get_ok("$BASE_URL/details/$proj");
+    $mech->get_ok("$BASE_URL/details/".$proj->id);
     $mech->content_like(qr|Public Project\?</label>\s*</td>\s*<td>\s*Yes\s*|);
     $mech->content_like(qr|Data Feeds[^<]*</label>\s*</td>\s*<td>\s*Yes\s*|);
 }
@@ -196,7 +198,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 {
 
     # first 'devs'
-    $mech->get_ok("$BASE_URL/devs/$proj");
+    $mech->get_ok("$BASE_URL/devs/".$proj->id);
     $mech->content_contains('No users are currently assigned to this project');
 
     my $dev1 = create_developer();
@@ -218,15 +220,18 @@ TODO: { local $TODO = "probably caused by some HTML change";
         ok($mech->success);
 
         # make sure this developer is in this project
-        my $proj_dev = Smolder::DB::ProjectDeveloper->retrieve(
+        my $proj_dev = Smolder::DB::rs('ProjectDeveloper')->find(
+				{
             project   => $proj,
             developer => $developer,
+				}
         );
-        isa_ok($proj_dev, 'Smolder::DB::ProjectDeveloper');
+        isa_ok($proj_dev, 'Smolder::DB::Schema::Result::ProjectDeveloper');
     }
 
     # make sure that all are listed under this proj's details
-    $mech->get_ok("$BASE_URL/details/$proj");
+		my $proj_id = $proj->id;
+    $mech->get_ok("$BASE_URL/details/$proj_id");
     $mech->content_contains($proj->name);
     $mech->content_contains($dev1->username);
     $mech->content_contains($dev2->username);
@@ -238,23 +243,24 @@ TODO: { local $TODO = "probably caused by some HTML change";
     is(scalar @admins, 0, 'no admins currently');
 
     # set dev2 as the admin
-    $mech->get_ok("$BASE_URL/change_admin?project=$proj&developer=$dev2");
+    $mech->get_ok("$BASE_URL/change_admin?project=$proj_id&developer=".$dev2->id);
     @admins = $proj->admins();
     is(scalar @admins, 1,         'now with 1 admin');
     is($admins[0]->id, $dev2->id, 'dev2 is now an admin');
 
     # set dev1 as an admin
-    $mech->get_ok("$BASE_URL/change_admin?project=$proj&developer=$dev1");
+    $mech->get_ok("$BASE_URL/change_admin?project=$proj_id&developer=".$dev1->id);
     @admins = $proj->admins();
     is(scalar @admins, 2, 'now with 2 admin');
     is_deeply(
-        [sort { $a->id <=> $b->id } @admins],
-        [$dev1, $dev2],
+        [map { $_->id } sort { $a->id <=> $b->id } @admins],
+        [$dev1->id, $dev2->id],
         '2 correct devs are now admins',
     );
 
     # now unset dev2 as an admin
-    $mech->get_ok("$BASE_URL/change_admin?project=$proj&developer=$dev2&remove=1");
+		my $dev2_id = $dev2->id;
+    $mech->get_ok("$BASE_URL/change_admin?project=$proj_id&developer=$dev2_id&remove=1");
     @admins = $proj->admins();
     is(scalar @admins, 1,         'now with 1 admin');
     is($admins[0]->id, $dev1->id, 'dev1 is now the only admin');
@@ -272,14 +278,16 @@ TODO: { local $TODO = "probably caused by some HTML change";
     ok($mech->success);
 
     # make sure this developer is not in this project
-    my $proj_dev = Smolder::DB::ProjectDeveloper->retrieve(
+    my $proj_dev = Smolder::DB::rs('ProjectDeveloper')->find(
+		{
         project   => $proj->id,
         developer => $dev2->id,
+		}
     );
     ok(!defined $proj_dev);
 
     # make sure that dev2 is not listed under this proj's details
-    $mech->get_ok("$BASE_URL/details/$proj");
+    $mech->get_ok("$BASE_URL/details/$proj_id");
     $mech->content_contains($proj->name);
     $mech->content_contains($dev1->username);
     $mech->content_lacks($dev2->username);
@@ -290,7 +298,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 # delete
 {
     $mech->follow_link_ok({text => 'All Projects'});
-    ok($mech->form_name("delete_$proj"));
+    ok($mech->form_name("delete_".$proj->id));
     $mech->submit();
     ok($mech->success);
     $mech->content_contains('project_list');
