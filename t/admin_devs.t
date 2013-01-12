@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
+die_on_fail();
 use Smolder::TestScript;
 use Smolder::TestData qw(
   base_url
@@ -21,6 +22,7 @@ if (is_smolder_running) {
 my $mech  = Smolder::Mech->new();
 my $url   = base_url() . '/admin_developers';
 my $pw    = 's3cr3t';
+delete_developers();
 my $admin = create_developer(admin => 1, password => $pw);
 my %data  = (
     username => 'i_am_a_test',
@@ -87,14 +89,14 @@ TODO: { local $TODO = "probably caused by some HTML change";
     $mech->submit();
     ok($mech->success);
     $mech->contains_message("New user '$data{username}' successfully created");
-    ($dev) = Smolder::DB::Developer->search(username => $data{username});
+    ($dev) = Smolder::DB::rs('Developer')->search({ username => $data{username} });
     END { $dev->delete() if ($dev) }
 }
 
 # 24..25
 # details
 {
-    $mech->get_ok($url . "/details/$dev");
+    $mech->get_ok($url . "/details/".$dev->id);
     $mech->content_contains($dev->username);
     $mech->content_contains($dev->full_name);
     $mech->content_contains($dev->email);
@@ -104,7 +106,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 # edit
 {
     $mech->get_ok("$url/list");
-    $mech->follow_link_ok({url => "/app/admin_developers/edit/$dev"});
+    $mech->follow_link_ok({url => "/app/admin_developers/edit/".$dev->id});
 
     # make sure it's prefilled
     $mech->content_contains('value="' . $dev->username . '"');
@@ -142,7 +144,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
     ok($mech->success);
     $mech->contains_message("User '$data{username}' has been successfully updated");
     $mech->get_ok("$url/list");
-    $mech->follow_link_ok({url => "/app/admin_developers/edit/$dev"});
+    $mech->follow_link_ok({url => "/app/admin_developers/edit/".$dev->id});
     $mech->content_contains($new_data{fname});
     $mech->content_lacks($data{fname});
 }
@@ -151,7 +153,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 # reset_pw
 {
     $mech->get_ok("$url/list");
-    $mech->form_name("resetpw_$dev");
+    $mech->form_name("resetpw_".$dev->id);
     $mech->submit();
     ok($mech->success);
     isnt($dev->password, db_field_value('developer', 'password', $dev->id));
@@ -171,7 +173,7 @@ TODO: { local $TODO = "probably caused by some HTML change";
 # delete
 {
     $mech->get_ok("$url/list");
-    ok($mech->form_name("delete_$dev"));
+    ok($mech->form_name("delete_".$dev->id));
     $mech->submit();
     ok($mech->success);
     $mech->content_contains('developer_list');

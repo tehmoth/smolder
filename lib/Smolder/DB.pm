@@ -1,7 +1,7 @@
 package Smolder::DB;
 use strict;
 use warnings;
-use Smolder::Conf qw(SQLDir DataDir);
+use Smolder::Conf qw(SQLDir DataDir HostName Port);
 use Smolder::DBIConn;
 use Smolder::Control;
 use DBI;
@@ -440,6 +440,14 @@ my $DATE_FMT = DateTime::Format::Strptime->new(
 sub parse_datetime {
     my ($class, $string) = @_;
     return $DATE_FMT->parse_datetime($string);
+}
+
+sub rs {
+	schema()->resultset(pop);
+}
+
+sub schema {
+	return Smolder::DB::Schema->connect( sub { Smolder::DBIConn->instance->dbh });
 }
 
 1;
