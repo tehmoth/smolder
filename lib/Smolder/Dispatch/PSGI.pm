@@ -1,9 +1,9 @@
-package Smolder::Dispatch;
+package Smolder::Dispatch::PSGI;
 
 use strict;
 use warnings;
 
-use parent 'CGI::Application::Dispatch';
+use parent 'CGI::Application::Dispatch::PSGI';
 
 sub dispatch_args {
     return {
@@ -18,7 +18,7 @@ sub dispatch_args {
                 app => 'Projects',
                 rm  => 'test_file_history',
             },
-            ':app/:rm?/:id?/:type?/:embed?' => {},
+            ':app/:rm?/:id?/:type?' => {},
         ],
     };
 }
