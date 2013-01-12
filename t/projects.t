@@ -15,7 +15,6 @@ use Smolder::TestData qw(
   delete_preferences
 );
 use Smolder::Mech;
-use Smolder::DB::ProjectDeveloper;
 use Smolder::Conf;
 use File::Spec::Functions qw(catfile);
 use HTTP::Request::Common;
@@ -34,9 +33,9 @@ my $proj1_id = create_project()->id();
 my $proj2_id = create_project(public => 0)->id();
 
 # add this $dev to $proj1 and $proj2
-my $proj1_dev = Smolder::DB::ProjectDeveloper->create(
+my $proj1_dev = Smolder::DB::rs('ProjectDeveloper')->create(
     {developer => $dev, project => $proj1_id, preference => create_preference()});
-my $proj2_dev = Smolder::DB::ProjectDeveloper->create(
+my $proj2_dev = Smolder::DB::rs('ProjectDeveloper')->create(
     {developer => $dev, project => $proj2_id, preference => create_preference()});
 
 END {
@@ -132,9 +131,9 @@ TODO: {
     $proj1 = _get_proj($proj1_id);
     is($proj1->report_count, 1);
     my ($report) = $proj1->all_reports();
-    isa_ok($report,            'Smolder::DB::SmokeReport');
-    isa_ok($report->project,   'Smolder::DB::Project');
-    isa_ok($report->developer, 'Smolder::DB::Developer');
+    isa_ok($report,            'Smolder::DB::Schema::Result::SmokeReport');
+    isa_ok($report->project,   'Smolder::DB::Schema::Result::Project');
+    isa_ok($report->developer, 'Smolder::DB::Schema::Result::Developer');
     is($report->pass,       453, 'correct # of passed');
     is($report->skip,       4,   'correct # of skipped');
     is($report->fail,       11,  'correct # of failed');
@@ -169,9 +168,9 @@ TODO: {
     is($proj1->report_count, 2);
     my ($report) = $proj1->all_reports();
     is($report->comments, 'with auth credentials');
-    isa_ok($report,            'Smolder::DB::SmokeReport');
-    isa_ok($report->project,   'Smolder::DB::Project');
-    isa_ok($report->developer, 'Smolder::DB::Developer');
+    isa_ok($report,            'Smolder::DB::Schema::Result::SmokeReport');
+    isa_ok($report->project,   'Smolder::DB::Schema::Result::Project');
+    isa_ok($report->developer, 'Smolder::DB::Schema::Result::Developer');
     is($report->pass,       453, 'correct # of passed');
     is($report->skip,       4,   'correct # of skipped');
     is($report->fail,       11,   'correct # of failed');
@@ -192,7 +191,7 @@ TODO: {
     }
     END { delete_smoke_reports() }
 
-    $mech->get_ok("/app/projects/smoke_reports/$proj1");
+    $mech->get_ok("/app/projects/smoke_reports/$proj1_id");
     $mech->content_contains($proj1->name);
     $mech->content_contains('Recent Smoke Reports');
 
@@ -239,7 +238,7 @@ TODO: {
     my $proj1 = _get_proj($proj1_id);
 
     # first HTML
-    $mech->get_ok("/app/projects/smoke_reports/$proj1");
+    $mech->get_ok("/app/projects/smoke_reports/$proj1_id");
     $mech->follow_link_ok({n => 1, url_regex => qr/report_details/});
     ok($mech->ct, 'text/html');
 
@@ -252,7 +251,7 @@ TODO: {
     $mech->content_contains('Linux localhost.localdomain 2.6.20-1.2952.fc6');
 
     # individual report files
-    $mech->get_ok("/app/projects/test_file_report_details/$proj1/0");
+    $mech->get_ok("/app/projects/test_file_report_details/$proj1_id/0");
     ok($mech->ct, 'text/html');
 }
 
@@ -288,7 +287,7 @@ TODO: {
     $mech->get_ok("$url/$report_id?invalid=1&invalid_reason=something+sucks");
     $mech->content_contains("INVALID");
     $report = undef;
-    $report = Smolder::DB::SmokeReport->retrieve($report_id);
+    $report = Smolder::DB::rs('SmokeReport')->find($report_id);
     ok($report->invalid);
     is($report->invalid_reason, 'something sucks');
 
@@ -296,7 +295,7 @@ TODO: {
     $mech->get_ok("$url/$report_id?invalid=0");
     $mech->content_lacks("INVALID");
     $report = undef;
-    $report = Smolder::DB::SmokeReport->retrieve($report_id);
+    $report = Smolder::DB::rs('SmokeReport')->find($report_id);
     ok(!$report->invalid);
 }
 
@@ -310,8 +309,8 @@ TODO: {
         project   => $proj1,
         developer => $dev,
     );
-    my $url   = "/app/projects/smoke_report/$report";
-    my $title = "Smoke Report #$report";
+    my $url   = "/app/projects/smoke_report/".$report->id;
+    my $title = "Smoke Report #".$report->id;
     $mech->get_ok($url);
     $mech->title_like(qr/\Q$title\E/);
     $mech->content_contains('(' . $proj1->name . ')');
@@ -328,7 +327,7 @@ TODO: {
         project   => $proj,
         developer => $dev,
     );
-    $mech->get_ok("/app/projects/tap_archive/$report");
+    $mech->get_ok("/app/projects/tap_archive/".$report->id);
     is($mech->ct, 'application/x-gzip', 'correct content-type');
     my $tmp = File::Temp->new();
     $tmp->close();
@@ -346,7 +345,7 @@ TODO: {
         project   => $proj,
         developer => $dev,
     );
-    $mech->get_ok("/app/projects/tap_stream/$report/1");
+    $mech->get_ok("/app/projects/tap_stream/".$report->id."/1");
     $mech->content_contains('ok 2');
     $mech->content_contains('ok 3 # skip');
     $mech->content_contains('1..7');
@@ -357,7 +356,7 @@ sub _get_proj {
     my (@ids) = @_;
     my @projs;
     foreach my $id (@ids) {
-        push(@projs, Smolder::DB::Project->retrieve($id));
+        push(@projs, Smolder::DB::rs('Project')->find($id));
     }
     if (wantarray) {
         return @projs;
