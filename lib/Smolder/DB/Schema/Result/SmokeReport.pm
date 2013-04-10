@@ -379,10 +379,11 @@ sub _send_emails {
     my ($self, $results) = @_;
 
     # setup some stuff for the emails that we only need to do once
-    my $subject = sprintf("Smolder - [%s] passed %i/%i tests: %s",
-                          $self->project->name(),
-                          $self->pass(),
-                          $self->total(),
+    my $subject = sprintf("Smolder - [%s] %i files ( %i/%i ) : %s",
+                          $self->project->name,
+                          $self->test_files,
+                          $self->pass,
+                          $self->total,
                           ( $self->failed() ? "FAILURE" : "SUCCESS" ));
 
     my $matrix = Smolder::TAPHTMLMatrix->new(
