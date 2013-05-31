@@ -1,5 +1,19 @@
 Revision history for Smolder
 
+    + Merged maddingue/master:
+      - fix 'Use of qw(...) as parentheses is deprecated' warnings
+    + Merged converter/master:
+      - Fix broken URL paths containing "developer_projects" which result in
+        CGI::Application errors for missing action handlers.
+      - Add support for UrlBase configuration option. Specifies base URL to
+        be used in href attributes when Smolder is behind a proxy.
+    + Merged Whiteknight/master:
+      - Some small fixes for readability. "Recieve" -> "Receive". "everytime"...
+    + Merged trammell/master:
+      - "it's" means "it is"; "its" is possessive
+    + Merged avar/1.51-fixes:
+      - Add --log_level option to specify LogLevel
+
 1.51
     + Fixed problem on machines with multiple IP addresses and other services bound to port 80 on different IPs - M. Peters
     + Another go at using images in POD - M. Peters
