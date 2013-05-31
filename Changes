@@ -1,6 +1,12 @@
 Revision history for Smolder
 
 1.52
+    + Cherry-picked from mcartmell/smolder:
+      - 9971951: set smtphost to localhost
+      - d3792b2: inline css for emails
+      - ff25b49: various css changes
+      - 0fd15ee: correct some columns
+      - d54d92d: tweaks to db creation
     + Merged markstos/smolder-as-cgi
       - Add a CGI-based dispatcher -- Mark Stosberg, Sven Dowideit
       - Add smolder_create_database -- Mark Stosberg
