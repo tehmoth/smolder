@@ -1,6 +1,9 @@
 Revision history for Smolder
 
 1.52
+    + Merged markstos/smolder-as-cgi
+      - Add a CGI-based dispatcher -- Mark Stosberg, Sven Dowideit
+      - Add smolder_create_database -- Mark Stosberg
     + Merged mumblingMac/v1.5.2:
       - Modifed subject line in smoke report e-mail to display more detail
         -- P. Leonard, K. McDaniel 

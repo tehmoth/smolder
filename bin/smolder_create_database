@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+# NOTE: You MUST set SMOLDER_CONF in the environment to point to a smolder.conf file. 
+# using ./etc/smolder.conf is recommended. You might set the following in it (uncommented);
+
+# Port        8012,
+# HostName    smokebot.host.com
+# FromAddress smokebot@host.com
+# SMTPHost    smtp.host.com
+# LogFile     /home/smokebot/logs/app.log
+# DataDir     /home/smokebot/data
+
+use FindBin::Real 'Bin';
+use lib Bin() . '/../lib/perl5';
+use Smolder::DB;
+
+Smolder::DB->create_database;
