@@ -1,5 +1,21 @@
 Revision history for Smolder
 
+1.52
+    + Merged mumblingMac/v1.5.2:
+      - Modifed subject line in smoke report e-mail to display more detail
+        -- P. Leonard, K. McDaniel 
+      - Fixed problem where the AutoRedirectToProject configuration directive
+        would redirect to a broken link -- K. McDaniel
+      - Fixed broken link(s) for progess graphs on project listing pages
+        -- K. McDaniel
+      - Fixed broken link to the full report within the smoke report e-mail(s)
+        -- P. Leonard, K. McDaniel
+      - Fixed auto completion for platform and architecture fields when
+        submitting a new smoke report -- P. Leonard
+      - Fixed RT #55514 by removing references of developer_X and public_X
+        within the URLs -- P. Leonard
+      - Fixed RT #84077 by enabling the skip field to be charted on the
+        progress graphs -- K. McDaniel
     + Merged maddingue/master:
       - fix 'Use of qw(...) as parentheses is deprecated' warnings
     + Merged converter/master:
