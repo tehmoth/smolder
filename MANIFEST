@@ -1,10 +1,12 @@
 .perltidyrc
 bin/smolder
+bin/smolder_create_database
 bin/smolder_smoke_signal
 bin/smolderctl
 Build.PL
 Changes
 hackathon_todo.txt
+htdocs/cgi-bin/dispatch.cgi
 htdocs/images/arrow-desc.gif
 htdocs/images/boxed-bg-bottom.png
 htdocs/images/boxed-bg-right.png
@@ -92,6 +94,7 @@ LICENSE
 MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
+README.md
 sql/db_version.sql
 sql/developer.sql
 sql/preference.sql
