@@ -10,8 +10,7 @@
 # LogFile     /home/smokebot/logs/app.log
 # DataDir     /home/smokebot/data
 
-use FindBin::Real 'Bin';
-use lib Bin() . '/../lib/perl5';
+use strict;
 use Smolder::DB;
 
 Smolder::DB->create_database;
