@@ -114,7 +114,7 @@ my ($help, $man);
 
 GetOptions(
     'server=s'       => \$server,
-    'port=s'         => \$port,
+    'port=i'         => \$port,
     'project=s'      => \$project,
     'username=s'     => \$user,
     'password=s'     => \$pw,
@@ -171,9 +171,14 @@ if (-r $file) {
     exit(1);
 }
 
+# port number
+if (not $port) {
+    ($server, $port) = split /:/, $server;
+    $port ||= 8080;
+}
+
 # try and reach the smolder server
-print "Trying to reach Smolder server at $server.\n" if $v;
-$port ||= 8080;
+print "Trying to reach Smolder server at $server:$port.\n" if $v;
 my $mech     = WWW::Mechanize->new();
 my $content;
 my $base_url = "http://$server:$port/app";
