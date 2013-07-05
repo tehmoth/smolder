@@ -19,11 +19,13 @@ sub _random_secret {
 my %VALUES;
 
 BEGIN {
-    my $share_dir;
+    my $share_dir = ".";
     my $blib_share_dir = rel2abs(catdir(curdir, 'blib', 'lib', 'auto', 'share', 'dist', 'Smolder'));
-    if( -d $blib_share_dir ) {
+
+    if (-d $blib_share_dir) {
         $share_dir = $blib_share_dir;
-    } else {
+    }
+    elsif (-d dist_dir('Smolder')) {
         $share_dir = dist_dir('Smolder');
     }
 
