@@ -216,7 +216,7 @@ sub init {
     foreach my $key (keys %args) {
         if( exists $VALUES{$key} ) {
             $VALUES{$key} = $args{$key};
-print STDERR "$key == $VALUES{$key} \n";
+#print STDERR "$key == $VALUES{$key} \n";
         } else {
             croak "$key is not a valid Smolder config parameter!";
         }
