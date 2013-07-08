@@ -1,5 +1,7 @@
 Revision history for Smolder
 
+    + RT #59881: fix documented default port number in smolder_smoke_signal
+
 1.52 -- 2013.07.08 -- SAPER
     + Improved how smolder_smoke_signal handle port number
     + Improved how Smolder::Conf determine share_dir
