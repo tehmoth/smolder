@@ -1,5 +1,6 @@
 Revision history for Smolder
 
+    + Added missing SQL upgrade for v1.52
     + RT #59881: fix documented default port number in smolder_smoke_signal
 
 1.52 -- 2013.07.08 -- SAPER
