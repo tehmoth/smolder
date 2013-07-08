@@ -143,7 +143,9 @@ my %ENUMS = (
         email_type => [qw(full summary link)],
         email_freq => [qw(on_new on_fail never)],
     },
-    project      => {graph_start => [qw(project year month week day)],},
+    project => {
+        graph_start => [qw< project year month week day 2weeks 3weeks >],
+    },
     smoke_report => {format      => [qw(XML YAML)],},
 );
 
