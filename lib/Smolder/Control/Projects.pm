@@ -115,8 +115,8 @@ sub smoke_test_validity {
 
 =head2 platform_options
 
-Returns an HTML list sutiable for a Prototype based "Autocomplete" form
-of exising platform otpions
+Returns an HTML list suitable for a Prototype based "Autocomplete" form
+of existing platform options
 
 =cut
 
@@ -128,8 +128,8 @@ sub platform_options {
 
 =head2 architecture_options
 
-Returns an HTML list sutiable for a Prototype based "Autocomplete" form
-of exising architecture otpions
+Returns an HTML list suitable for a Prototype based "Autocomplete" form
+of existing architecture options
 
 =cut
 
@@ -157,7 +157,7 @@ sub add_report {
     return $self->error_message('Project does not exist')
       unless $project;
 
-    # make sure ths developer is a member of this project, or it's a public project
+    # make sure the developer is a member of this project, or it's a public project
     # that allows anonymous uploads
     if (!$project->has_developer($self->developer)) {
         if ($project->public && !$project->allow_anon) {
@@ -207,7 +207,7 @@ sub process_add_report {
             $q->param('password'));
     }
 
-    # make sure ths developer is a member of this project, or it's a public project
+    # make sure the developer is a member of this project, or it's a public project
     # that allows anonymous uploads
     if (!$project->has_developer($self->developer)) {
         if ($project->public && !$project->allow_anon) {
@@ -298,7 +298,7 @@ sub smoke_report {
       unless $smoke;
     my $project = $smoke->project;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($project);
 
@@ -322,7 +322,7 @@ sub smoke_reports {
     return $self->error_message('Project does not exist')
       unless $project;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($project);
 
@@ -366,7 +366,7 @@ sub report_details {
     return $self->error_message('Test Report does not exist')
       unless $report;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($report->project);
 
@@ -393,7 +393,7 @@ sub test_file_report_details {
       unless $report;
     my $num = $self->param('type') || 0;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($report->project);
     return $report->html_test_detail($num);
@@ -411,7 +411,7 @@ sub tap_archive {
     return $self->error_message('Test Report does not exist')
       unless $report;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($report->project);
 
@@ -432,7 +432,7 @@ sub tap_stream {
     return $self->error_message("Test Report $report_id does not exist")
       unless $report;
 
-    # make sure ths developer is a member of this project
+    # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($report->project);
     my $output = $report->tap_stream($tap_index);
