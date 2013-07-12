@@ -29,7 +29,7 @@ BEGIN {
         $share_dir = dist_dir('Smolder');
     }
 
-    my $default_hostname = $ENV{HOSTNAME} || $ENV{HOST} || 'localhost.localdomain';
+    my $default_hostname = $ENV{HOSTNAME} || $ENV{HOST} || 'localhost';
     %VALUES = (
         Port                  => 8080,
         HostName              => $default_hostname,
