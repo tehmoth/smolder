@@ -52,6 +52,23 @@ From the sources:
     $ ./Build test
     $ sudo ./Build install
 
+The Debian way (this will make and install a .deb package with dh-make-perl):
+
+    $ apt-get install libcgi-application-plugin-json-perl libclass-dbi-sqlite-perl \
+      libmime-lite-perl libgd-graph-perl libgd-text-perl libhtml-fillinform-perl \
+      libfile-slurp-perl libemail-valid-perl libdata-random-perl libdatetime-perl \
+      libtap-harness-archive-perl libtemplate-plugin-cycle-perl libfile-sharedir-perl \
+      libfile-homedir-perl libfile-mmagic-perl libgd-graph3d-perl libipc-run-perl \
+      libtest-www-mechanize-perl libxml-atom-simplefeed-perl libhtml-tagcloud-perl \
+      libhtml-formattext-withlinks-perl libdata-formvalidator-perl \
+      libcgi-application-server-perl libdatetime-format-strptime-perl \
+      libtemplate-plugin-number-format-perl libcgi-application-plugin-logdispatch-perl \
+      libcgi-application-plugin-stream-perl libcgi-application-plugin-tt-perl \
+      libcgi-application-plugin-validaterm-perl libclass-dbi-plugin-retrieveall-perl \
+      libdata-formvalidator-constraints-datetime-perl libnet-server-perl dh-make-perl
+    $ dh-make-perl --install --cpan Smolder
+
+
 Usage
 -----
 A good practice is to create a dedicated `smolder` user account.
