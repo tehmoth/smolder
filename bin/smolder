@@ -1,10 +1,84 @@
 #!/usr/local/bin/perl
 use strict;
 use warnings;
-use Getopt::Long;
-use Pod::Usage;
-use Smolder::Conf;
 use File::Spec::Functions qw(catdir);
+use Getopt::Long;
+use Smolder::Conf;
+
+
+$::PROGRAM = "smolder";
+$::VERSION = $Smolder::VERSION;
+
+
+#
+# main
+# ----
+MAIN: {
+    run() unless caller();
+}
+
+
+
+#
+# run()
+# ---
+sub run {
+    my ($conf, $daemon, $help, $man, $version, $port, $host, $data_dir,
+        $share_dir, $log_file, $log_level);
+
+    # parse options
+    GetOptions(
+        'conf|config|c=s'   => \$conf,
+        'daemon|d'          => \$daemon,
+        'port|p=s'          => \$port,
+        'host|h=s'          => \$host,
+        'data_dir=s'        => \$data_dir,
+        'share_dir=s'       => \$share_dir,
+        'log_file=s'        => \$log_file,
+        'log_level=s'       => \$log_level,
+        'help|usage'        => \$help,
+        'man'               => \$man,
+        'version|V'         => \$version,
+    ) or pod2usage(0);
+
+    $help       and pod2usage(1);
+    $man        and pod2usage(2);
+    $version    and print "$::PROGRAM v$::VERSION\n" and exit;
+
+    my %conf_values;
+    $conf_values{Port}     = $port      if $port;
+    $conf_values{HostName} = $host      if $host;
+    $conf_values{DataDir}  = $data_dir  if $data_dir;
+    $conf_values{LogFile}  = $log_file  if $log_file;
+    $conf_values{LogLevel} = $log_level if $log_level;
+
+    if ($share_dir) {
+        $conf_values{TemplateDir} = catdir($share_dir, 'templates');
+        $conf_values{SQLDir}      = catdir($share_dir, 'sql');
+        $conf_values{HtdocsDir}   = catdir($share_dir, 'htdocs');
+    }
+
+    Smolder::Conf->init_from_file($conf) if $conf;
+    Smolder::Conf->init(%conf_values)    if %conf_values;
+
+    require Smolder::Server;
+    Smolder::Server->new(daemon => $daemon)->start();
+}
+
+
+#
+# pod2usage()
+# ---------
+sub pod2usage {
+    my ($n) = @_;
+    require Pod::Usage;
+    Pod::Usage::pod2usage({ -exitval => 0, -verbose => $n, -noperldoc => 1 });
+}
+
+
+1;
+
+__END__
 
 =head1 NAME 
 
@@ -12,80 +86,75 @@ smolder - Web Smoke Test Aggregator
 
 =head1 SYNOPSIS
 
-  smolder --conf /path/to/smolder.conf
+    smolder [--conf /path/to/smolder.conf] [--daemon] [--host name] [--port n]
+    smolder { --help | --man | --version }
 
-  smolder --daemon 
+=head1 OPTIONS
+
+=head2 Program options
+
+=over
+
+=item B<-c>, B<--conf> I<path>
+
+Specify the path to the configuration file.
+
+=item B<-d>, B<--daemon>
+
+Run the program in the background as a daemon process.
+
+=item B<--data_dir> I<path>
+
+Specify the path of the directory to store the data. Defaults to
+C<< File::HomeDir->my_data . "/.smolder" >>
+
+=item B<-h>, B<--host> I<name>
+
+Specify the hostname to bind onto. Defaults to C<$ENV{HOSTNAME}>,
+C<$ENV{HOST}>, C<localhost>.
+
+=item B<--log_file> I<path>
+
+Specify the path to the log file.
+
+=item B<--log_level> I<level>
+
+Specify a Log::Dispatch level.
+
+=item B<-p>, B<--port> I<number>
+
+Specify the port number to bind onto. Defaults to 8080.
+
+=item B<--share_dir> I<path>
+
+Specify the path of the directory with the read-only shared data (HTML
+templates, images, JavaScript, CSS, SQL). Defaults to the installed one.
+
+=back
+
+=head2 Help options
+
+=over
+
+=item B<-h>, B<--help>
+
+Print a short usage description, then exit.
+
+=item B<--man>
+
+Print the manual page of the program, then exit.
+
+=item B<-V>, B<--version>
+
+Print the program name and version, then exit.
+
+=back
+
 
 =head1 DESCRIPTION
 
 Run the Smolder server.
 
-=head1 OPTIONS
-
-=over
-
-=item --daemon (-d)
-
-Run the server in the background as a daemon process.
-
-=item --conf (-c)
-
-Specify a smolder.conf config file.
-
-=item --port (-p)
-
-Specify the port from which Smolder will server requests. Defaults to 8080
-
-=item --host (-h)
-
-The hostname that Smolder will use when running. Defaults to localhost@localdomain
-
-=item --data_dir
-
-The data directory that Smolder will use. Defaults to $HOME/.smolder (or equivalent)
-
-=item --share_dir
-
-The shared directory that Smolder will use for read-only things like templates, css, images and sql files
-
-=item --log_file
-
-The log file used by Smolder.
-
-=item --help
-
-Show the help screen.
-
-=back
 
 =cut
 
-my ($conf, $daemon, $help, $port, $host, $data_dir, $share_dir, $log_file, $log_level);
-GetOptions(
-    'conf|c=s'    => \$conf,
-    'daemon|d'    => \$daemon,
-    'port|p=s'    => \$port,
-    'host|h=s'    => \$host,
-    'data_dir=s'  => \$data_dir,
-    'share_dir=s' => \$share_dir,
-    'log_file=s'  => \$log_file,
-    'log_level=s' => \$log_level,
-    'help'        => \$help,
-) or exit 1;
-pod2usage(1) if $help;
-
-my %conf_values;
-$conf_values{Port}     = $port     if $port;
-$conf_values{HostName} = $host     if $host;
-$conf_values{DataDir}  = $data_dir if $data_dir;
-$conf_values{LogFile}  = $log_file if $log_file;
-$conf_values{LogLevel} = $log_level if $log_level;
-if ($share_dir) {
-    $conf_values{TemplateDir} = catdir($share_dir, 'templates');
-    $conf_values{SQLDir}      = catdir($share_dir, 'sql');
-    $conf_values{HtdocsDir}   = catdir($share_dir, 'htdocs');
-}
-Smolder::Conf->init_from_file($conf) if $conf;
-Smolder::Conf->init(%conf_values)    if %conf_values;
-require Smolder::Server;
-Smolder::Server->new(daemon => $daemon)->start();
