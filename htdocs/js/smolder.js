@@ -970,7 +970,7 @@ var myrules = {
             } else {
                 $(indicator).style.visibility = 'visible';
                 Smolder.Ajax.update({
-                    url        : el.href,
+                    url        : el.href + "/embed",
                     target     : target,
                     indicator  : 'none',
                     onComplete : function() {
@@ -1062,7 +1062,7 @@ var myrules = {
                     indicator.style.visibility = 'visible';
                     
                     Smolder.Ajax.update({
-                        url        : $('for_testfile_details_' + index).href,
+                        url        : $('for_testfile_details_' + index).href + '/embed',
                         target     : div,
                         indicator  : 'none',
                         onComplete : function() {

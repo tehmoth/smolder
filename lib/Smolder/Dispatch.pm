@@ -16,7 +16,7 @@ sub dispatch_args {
                 app => 'Projects',
                 rm  => 'test_file_history',
             },
-            ':app/:rm?/:id?/:type?' => {},
+            ':app/:rm?/:id?/:type?/:embed?' => {},
         ],
     };
 }

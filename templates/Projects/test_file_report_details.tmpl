@@ -1,0 +1,28 @@
+[%- SET page_title = project.name _ ' - ' _ test_file.label -%]
+
+<h2>Test details</h2>
+
+<div class="tap">
+<table class="boxed matrix">
+  <thead>
+    <tr>
+      <th>Smoke report details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="results">
+      <td> [% details %] </td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+<script type="text/javascript">
+Behaviour.register({
+    '.tooltip': function(element) {
+        Smolder.setup_tooltip(element, "tooltip");
+    }
+});
+</script>
+

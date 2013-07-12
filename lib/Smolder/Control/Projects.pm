@@ -391,12 +391,24 @@ sub test_file_report_details {
     my $report = Smolder::DB::SmokeReport->retrieve($self->param('id'));
     return $self->error_message('Test Report does not exist')
       unless $report;
-    my $num = $self->param('type') || 0;
 
     # make sure the developer is a member of this project
     return $self->error_message('Unauthorized for this project')
       unless $self->can_see_project($report->project);
-    return $report->html_test_detail($num);
+
+    my $num     = $self->param('type')  || 0;
+    my $embed   = $self->param("embed") || 0;
+    my $details = $report->html_test_detail($num);
+
+    my $tt_params = {
+        tap     => ${$report->html},
+        project => $report->project,
+        report  => $report,
+        details => $$details,
+    };
+
+    return $embed ? $details
+        : $self->tt_process("Projects/test_file_report_details.tmpl", $tt_params)
 }
 
 =head2 tap_archive
