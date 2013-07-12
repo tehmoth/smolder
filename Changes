@@ -1,5 +1,9 @@
 Revision history for Smolder
 
+    + Refactored bin/smolder
+    + RT #52975: added a template so test details are in a correct HTML page
+    + Merged djzort/master
+      - Debian install steps
     + Added missing SQL upgrade for v1.52
     + Added two new graph_start values, to have fixed sliding windows
     + RT #59881: fix documented default port number in smolder_smoke_signal
