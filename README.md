@@ -65,7 +65,8 @@ The Debian way (this will make and install a .deb package with dh-make-perl):
       libtemplate-plugin-number-format-perl libcgi-application-plugin-logdispatch-perl \
       libcgi-application-plugin-stream-perl libcgi-application-plugin-tt-perl \
       libcgi-application-plugin-validaterm-perl libclass-dbi-plugin-retrieveall-perl \
-      libdata-formvalidator-constraints-datetime-perl libnet-server-perl dh-make-perl
+      libdata-formvalidator-constraints-datetime-perl libnet-server-perl dh-make-perl \
+      libtemplate-plugin-number-format-perl
     $ dh-make-perl --install --cpan Smolder
 
 
