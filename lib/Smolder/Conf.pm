@@ -1,6 +1,7 @@
 package Smolder::Conf;
 use strict;
 use warnings;
+use File::Path;
 use File::Spec::Functions qw(catfile catdir rel2abs curdir);
 use File::ShareDir qw(dist_dir);
 use File::HomeDir;
@@ -31,6 +32,10 @@ BEGIN {
         $share_dir = $dist_share_dir;
     }
 
+    # create the path to the default data directory
+    my $data_dir = catdir(File::HomeDir->my_data, '.smolder');
+    mkpath $data_dir;
+
     my $default_hostname = $ENV{HOSTNAME} || $ENV{HOST} || 'localhost';
     %VALUES = (
         Port                  => 8080,
@@ -43,7 +48,7 @@ BEGIN {
         LogLevel              => 'warning',
         PidFile               => undef,
         TemplateDir           => catdir($share_dir, 'templates'),
-        DataDir               => catdir(File::HomeDir->my_data, '.smolder'),
+        DataDir               => $data_dir,
         HtdocsDir             => catdir($share_dir, 'htdocs'),
         SQLDir                => catdir($share_dir, 'sql'),
         Secret                => _random_secret(),
