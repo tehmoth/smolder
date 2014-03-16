@@ -15,7 +15,6 @@ use File::Temp qw(tempdir);
 use Cwd qw(fastcwd);
 use DateTime;
 use Smolder::TAPHTMLMatrix;
-use Carp qw(croak);
 use TAP::Harness::Archive;
 use IO::Zlib;
 
