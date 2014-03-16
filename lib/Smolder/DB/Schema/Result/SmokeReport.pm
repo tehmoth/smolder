@@ -695,10 +695,9 @@ sub update_from_tap_archive {
     );
 
     # update
-    $self->set_inflated_columns(
-			{
+    $self->set_inflated_columns({
         pass       => scalar $aggregator->passed,
-        fail       => $suite_data{failed},              # aggregator doesn't calculate these 2 right
+        fail       => $suite_data{failed},  # aggregator doesn't calculate these 2 right
         total      => $suite_data{total},
         skip       => scalar $aggregator->skipped,
         todo       => scalar $aggregator->todo,
@@ -706,8 +705,7 @@ sub update_from_tap_archive {
         test_files => scalar @suite_results,
         failed     => 0 + $aggregator->failed,
         duration   => $duration,
-			}
-    );
+    });
 
     # we can take some things from the meta information in the archive
     # if they weren't provided during the upload
@@ -715,14 +713,16 @@ sub update_from_tap_archive {
         foreach my $k (keys %{$meta->{extra_properties}}) {
             foreach my $field (qw< architecture platform comments >) {
                 if (lc($k) eq $field && !defined $self->$field) {
-                    $self->set_inflated_columns({ $field => delete $meta->{extra_properties}->{$k} });
+                    $self->set_inflated_columns({
+                        $field => delete $meta->{extra_properties}->{$k}
+                    });
                     last;
                 }
             }
         }
     }
 
-		my %unique_tags = map { $_ => 1 } map { @$_ } values %tags_for_file;
+    my %unique_tags = map { $_ => 1 } map { @$_ } values %tags_for_file;
 
     # generate the HTML reports
     my $matrix = Smolder::TAPHTMLMatrix->new(
