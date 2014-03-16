@@ -632,6 +632,19 @@ sub graph_start_datetime {
     } elsif ($self->graph_start eq 'day') {
         $dt = DateTime->today();
     }
+
+    # two weeks before today
+    elsif ($self->graph_start eq '2weeks') {
+        $dt = DateTime->today;
+        $dt->subtract(weeks => 2);
+    }
+
+    # three weeks before today
+    elsif ($self->graph_start eq '3weeks') {
+        $dt = DateTime->today;
+        $dt->subtract(weeks => 3);
+    }
+
     return $dt;
 }
 
