@@ -379,9 +379,6 @@ sub _send_emails {
     my ($self, $results) = @_;
 
     # setup some stuff for the emails that we only need to do once
-#    my $subject =
-#      "[" . $self->project->name . "] new " . ($self->failed ? "failed " : '') . "Smolder report";
-
     my $subject = sprintf("Smolder - [%s] passed %i/%i tests: %s",
                           $self->project->name(),
                           $self->pass(),
