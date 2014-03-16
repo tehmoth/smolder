@@ -713,7 +713,7 @@ sub update_from_tap_archive {
     # if they weren't provided during the upload
     if ($meta->{extra_properties}) {
         foreach my $k (keys %{$meta->{extra_properties}}) {
-            foreach my $field qw(architecture platform comments) {
+            foreach my $field (qw< architecture platform comments >) {
                 if (lc($k) eq $field && !defined $self->$field) {
                     $self->set_inflated_columns({ $field => delete $meta->{extra_properties}->{$k} });
                     last;
