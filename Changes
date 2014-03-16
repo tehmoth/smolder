@@ -23,8 +23,8 @@ Revision history for Smolder
       - Add a CGI-based dispatcher -- Mark Stosberg, Sven Dowideit
       - Add smolder_create_database -- Mark Stosberg
     + Merged mumblingMac/v1.5.2:
-      - Modifed subject line in smoke report e-mail to display more detail
-        -- P. Leonard, K. McDaniel 
+      - Modified subject line in smoke report e-mail to display more detail
+        -- P. Leonard, K. McDaniel
       - Fixed problem where the AutoRedirectToProject configuration directive
         would redirect to a broken link -- K. McDaniel
       - Fixed broken link(s) for progess graphs on project listing pages
