@@ -20,13 +20,15 @@ my %VALUES;
 
 BEGIN {
     my $share_dir = ".";
-    my $blib_share_dir = rel2abs(catdir(curdir, 'blib', 'lib', 'auto', 'share', 'dist', 'Smolder'));
+    my $blib_share_dir = rel2abs(catdir(curdir,
+        'blib', 'lib', 'auto', 'share', 'dist', 'Smolder'));
+    my $dist_share_dir = eval { dist_dir('Smolder') } // "";
 
     if (-d $blib_share_dir) {
         $share_dir = $blib_share_dir;
     }
-    elsif (-d dist_dir('Smolder')) {
-        $share_dir = dist_dir('Smolder');
+    elsif (-d $dist_share_dir) {
+        $share_dir = $dist_share_dir;
     }
 
     my $default_hostname = $ENV{HOSTNAME} || $ENV{HOST} || 'localhost';
