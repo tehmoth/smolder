@@ -1,14 +1,17 @@
 package Smolder::TAPHTMLMatrix;
 use strict;
 use warnings;
-use Carp qw/croak/;
-use File::Spec::Functions qw(catdir catfile tmpdir);
+
+use Carp            qw< croak >;
 use File::Path;
-use URI::file;
+use File::Spec::Functions qw< catdir catfile tmpdir >;
 use Template;
-use Smolder::Conf qw(TemplateDir);
-use Smolder::Control;
 use Template::Plugin::Cycle;
+use URI::file;
+
+use Smolder::Conf   qw< TemplateDir >;
+use Smolder::Control;
+
 
 our $TMPL = Template->new(
     COMPILE_DIR  => tmpdir(),
