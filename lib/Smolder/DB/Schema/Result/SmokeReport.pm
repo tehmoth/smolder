@@ -270,19 +270,20 @@ __PACKAGE__->inflate_column('added', {
 		deflate => sub { Smolder::DB->format_datetime(shift) },
 	});
 
+use Carp            qw< croak >;
+use Cwd	            qw< fastcwd >;
+use DateTime;
+use File::Basename  qw< basename >;
+use File::Copy      qw< move copy >;
+use File::Path      qw< mkpath rmtree >;
+use File::Spec::Functions qw< catdir catfile >;
+use File::Temp      qw< tempdir >;
+use IO::Zlib;
+use TAP::Harness::Archive;
+
 use Smolder::Conf qw(DataDir TruncateTestFilenames);
 use Smolder::Email;
-use File::Spec::Functions qw(catdir catfile);
-use File::Basename qw(basename);
-use File::Path qw(mkpath rmtree);
-use File::Copy qw(move copy);
-use File::Temp qw(tempdir);
-use Cwd qw(fastcwd);
-use DateTime;
 use Smolder::TAPHTMLMatrix;
-use Carp qw(croak);
-use TAP::Harness::Archive;
-use IO::Zlib;
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
