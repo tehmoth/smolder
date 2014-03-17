@@ -62,8 +62,8 @@ sub generate_html {
             odd_even         => $odd_even,
             url_base         => Smolder::Util::url_base(),
             extra_properties => $extra_props,
-						tags_for_file		 => $self->tags_for_file,
-						possible_tags		 => $self->possible_tags,
+            tags_for_file    => $self->tags_for_file,
+            possible_tags    => $self->possible_tags,
         },
         $file,
     ) or croak $TMPL->error;
