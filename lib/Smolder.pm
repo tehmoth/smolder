@@ -1,6 +1,6 @@
 package Smolder;
 
-our $VERSION = '2.0';
+our $VERSION = '2.00';
 
 1;
 
