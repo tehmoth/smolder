@@ -1,5 +1,18 @@
 Revision history for Smolder
 
+2.00 -- 2014.03.16 -- SAPER
+    Perl QA Hackathon 2014 in Lyon, France
+    + Merged mcartmell/smolder:
+      - Run Smolder as a PSGI app
+      - Migrated from Class::DBI to DBIx::Class
+      - Encrypt passwords
+      - Report VCS revision
+      - Various CSS and JavaScript changes
+    + Re-applied some previously applied changes that were lost during the merge
+    + Small code cleanups here and there
+    + Improved (again) how Smolder::Conf determine share_dir
+
+1.53 -- 2013.07.1x -- (unreleased)
     + Refactored bin/smolder
     + RT #52975: added a template so test details are in a correct HTML page
     + Merged djzort/master
