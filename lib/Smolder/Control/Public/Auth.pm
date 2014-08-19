@@ -111,7 +111,7 @@ sub do_login {
                 -value   => $tkt,
                 -expires => '+96h',
             );
-            $self->header_add(cookie => [$cookie]);
+            $self->header_add(-cookie => [$cookie]);
             $ENV{REMOTE_USER} = $dev->id;
             return $dev;
         }
