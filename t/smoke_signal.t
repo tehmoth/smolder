@@ -23,7 +23,7 @@ if (is_smolder_running) {
     plan(skip_all => 'Smolder not running');
 }
 
-my $bin          = catfile(cwd(), 'bin', 'smolder_smoke_signal');
+my $bin          = catfile(cwd(), 'blib','script', 'smolder_smoke_signal');
 my $host         = HostName();
 my $port				 = Port();
 my $project      = create_project(public => 0);
